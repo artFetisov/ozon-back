@@ -1,11 +1,9 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { NestFactory } from '@nestjs/core'
+import { AppModule } from './app.module'
 
 async function start() {
-  const PORT = process.env.PORT || 4999;
-  const app = await NestFactory.create(AppModule, { cors: true });
-
-  console.log(process.env.NODE_ENV);
+  const PORT = process.env.PORT || 4999
+  const app = await NestFactory.create(AppModule, { cors: true })
 
   // app.use(corsMiddleware);
 
@@ -23,11 +21,11 @@ async function start() {
   //     'Origin, Authorization, X-Requested-With, Content-Type, Accept, Authentication, Access-control-allow-credentials, Access-control-allow-headers, Access-control-allow-methods, Access-control-allow-origin, User-Agent, Referer, Accept-Encoding, Accept-Language, Access-Control-Request-Headers, Cache-Control, Pragma',
   // });
 
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api')
 
   app.listen(PORT, () => {
-    console.log(`Server started on PORT ${PORT}`);
-  });
+    console.log(`Server started on PORT ${PORT}`)
+  })
 }
 
-start();
+start()
