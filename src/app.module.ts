@@ -4,10 +4,12 @@ import { UserModule } from './user/user.module'
 import { SequelizeModule } from '@nestjs/sequelize'
 import * as pg from 'pg'
 import { User } from './user/user.model'
+import { MailModule } from './mail/mail.module'
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      isGlobal: true,
       envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
     SequelizeModule.forRoot({
@@ -22,6 +24,7 @@ import { User } from './user/user.model'
       autoLoadModels: true,
     }),
     UserModule,
+    MailModule,
   ],
 })
 export class AppModule {}

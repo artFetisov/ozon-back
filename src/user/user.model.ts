@@ -1,10 +1,10 @@
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript'
+import { Column, DataType, Model, Table } from 'sequelize-typescript'
 import { GenderEnum } from './types/gender.types'
 
-interface UserCreationsAttrs {}
+// interface UserCreationsAttrs {}
 
 @Table({ tableName: 'user' })
-export class User extends Model<User, UserCreationsAttrs> {
+export class User extends Model<User> {
   @Column({
     type: DataType.INTEGER,
     unique: true,
