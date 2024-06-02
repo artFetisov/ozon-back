@@ -1,7 +1,4 @@
-export interface IMailData {
+export interface IEmailSendCode {
   to: string
-  subject: string
-  firstName?: string
-  lastName?: string
-  link?: string
+  code: number
 }

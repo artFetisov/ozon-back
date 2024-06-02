@@ -6,7 +6,7 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Get()
-  sendMail() {
-    return this.userService.registration()
+  getAll() {
+    return this.userService.getAll()
   }
 }

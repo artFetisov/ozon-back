@@ -1,12 +1,30 @@
 import { Injectable } from '@nestjs/common'
-import { MailService } from 'src/mail/mail.service'
-import { IMailData } from 'src/mail/types/mailData.types'
+import { InjectModel } from '@nestjs/sequelize'
+import { User } from './user.model'
 
 @Injectable()
 export class UserService {
-  constructor(private readonly mailService: MailService) {}
+  constructor(@InjectModel(User) private userRepository: typeof User) {}
 
-  async registration() {
-    return this.mailService.sendMail()
+  async getAll() {
+    return this.userRepository.findAll({ include: { all: true } })
+  }
+
+  // async createUser() {
+  //   return this.userRepository.create({})
+  // }
+
+  async getUserByEmail(email: string) {
+    return this.userRepository.findOne({
+      where: { email },
+      include: { all: true },
+    })
+  }
+
+  async getUserById(id: number) {
+    return this.userRepository.findOne({
+      where: { id },
+      include: { all: true },
+    })
   }
 }

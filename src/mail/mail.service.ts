@@ -1,17 +1,14 @@
 import { MailerService } from '@nestjs-modules/mailer'
 import { Injectable } from '@nestjs/common'
-import { IMailData } from './types/mailData.types'
+import { IEmailSendCode } from './types/mailData.types'
 
 @Injectable()
 export class MailService {
   constructor(private mailerService: MailerService) {}
 
-  async sendMail() {
-    const code = '888999'
-
+  async sendMail({ to, code }: IEmailSendCode) {
     await this.mailerService.sendMail({
-      to: 'fetishfestoff@mail.ru',
-      from: 'fetishfestoff@mail.ru',
+      to,
       subject: 'Отправка кода верификации',
       template: 'code',
       context: {
