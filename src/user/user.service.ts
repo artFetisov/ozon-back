@@ -4,7 +4,9 @@ import { User } from './user.model'
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User) private userRepository: typeof User) {}
+  constructor(
+    @InjectModel(User) private readonly userRepository: typeof User
+  ) {}
 
   async getAll() {
     return this.userRepository.findAll({ include: { all: true } })

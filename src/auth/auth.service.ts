@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config'
 import { UserService } from 'src/user/user.service'
 import { LoginByEmailDto } from './dto/loginByEmail.dto'
 import { MailService } from 'src/mail/mail.service'
+import { TemporaryAuthDataService } from 'src/temporary-auth-data/temporary-auth-data.service'
 
 // export interface AllSettledUserData {
 //   status?: 'rejected' | 'fulfilled'
@@ -14,7 +15,8 @@ import { MailService } from 'src/mail/mail.service'
 export class AuthService {
   constructor(
     private readonly userService: UserService,
-    private readonly mailService: MailService
+    private readonly mailService: MailService,
+    private readonly temporaryAuthDataService: TemporaryAuthDataService
   ) {}
 
   async loginByEmail({ email }: LoginByEmailDto) {
@@ -27,10 +29,14 @@ export class AuthService {
     }
 
     const verificationCode = this.generateCode(1000, 9000)
+    const passwordHash = await bcrypt.hash(String(verificationCode), 5)
+
+    await this.temporaryAuthDataService.createTemporaryAuthData({
+      property: email,
+      passwordHash,
+    })
 
     await this.mailService.sendMail({ code: verificationCode, to: email })
-
-    const hashPassword = await bcrypt.hash(String(verificationCode), 5)
 
     return { email, isNewUser }
   }
