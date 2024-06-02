@@ -6,5 +6,6 @@ import { TemporaryAuthData } from './temporary-auth-data.model'
 @Module({
   providers: [TemporaryAuthDataService],
   imports: [SequelizeModule.forFeature([TemporaryAuthData])],
+  exports: [TemporaryAuthDataService],
 })
 export class TemporaryAuthDataModule {}
