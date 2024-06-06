@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
 import { User } from './user.model'
 import { CreateUserDto } from './dto/createUser.dto'
+import { UpdatePersonalDataDto } from './dto/updatePersonalData.dto'
 
 @Injectable()
 export class UserService {
@@ -27,5 +28,13 @@ export class UserService {
 			where: { id },
 			include: { all: true },
 		})
+	}
+
+	async updatePersonalData(dto: UpdatePersonalDataDto, id: number) {
+		const user = await this.getUserById(id)
+
+		await user?.update({ ...dto })
+
+		return user
 	}
 }

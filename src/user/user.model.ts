@@ -32,7 +32,7 @@ export class User extends Model<User, UserCreationsAttrs> {
 
 	@Column({
 		type: DataType.ENUM,
-		values: [GenderEnum.FEMALE, GenderEnum.MALE, ''],
+		values: [GenderEnum.FEMALE, GenderEnum.MALE],
 		defaultValue: '',
 	})
 	gender: GenderEnum

@@ -7,9 +7,10 @@ import { PassportModule } from '@nestjs/passport'
 import { MailModule } from 'src/mail/mail.module'
 import { TemporaryAuthDataModule } from 'src/temporary-auth-data/temporary-auth-data.module'
 import { UserModule } from 'src/user/user.module'
+import { JwtStrategy } from './strategies/jwt.strategy'
 
 @Module({
-	providers: [AuthService],
+	providers: [AuthService, JwtStrategy],
 	controllers: [AuthController],
 	imports: [MailModule, TemporaryAuthDataModule, UserModule, TokenModule, ConfigModule, PassportModule],
 	exports: [AuthService],

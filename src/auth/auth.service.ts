@@ -4,7 +4,6 @@ import { LoginByEmailDto } from './dto/loginByEmail.dto'
 import { MailService } from 'src/mail/mail.service'
 import { TemporaryAuthDataService } from 'src/temporary-auth-data/temporary-auth-data.service'
 import { CheckCodeByEmailDto } from './dto/loginByEmailCheckCode'
-import { User } from 'src/user/user.model'
 import { TokenService } from 'src/token/token.service'
 import { UserService } from 'src/user/user.service'
 
@@ -18,6 +17,10 @@ export class AuthService {
 	) {}
 
 	async loginByEmail({ email }: LoginByEmailDto) {
+		const foundedTempData = await this.temporaryAuthDataService.getByPropertyValue(email)
+
+		foundedTempData?.destroy()
+
 		const candidate = await this.userService.getUserByEmail(email)
 
 		const verificationCode = this.generateCode(100000, 900000)
@@ -45,7 +48,7 @@ export class AuthService {
 		const isComparePassword = await bcrypt.compare(code, foundedTempData.passwordHash)
 
 		if (!isComparePassword) {
-			throw new HttpException('Неверный код подтверждения', HttpStatus.UNAUTHORIZED)
+			throw new HttpException('Неверный код. Попробуйте еще раз', HttpStatus.UNAUTHORIZED)
 		}
 
 		user = await this.userService.getUserByEmail(email)
@@ -63,19 +66,12 @@ export class AuthService {
 		await foundedTempData.destroy()
 
 		return {
-			user: this.getUserFields(user),
+			user,
 			tokens,
 		}
 	}
 
-	generateCode(min: number, max: number): number {
+	private generateCode(min: number, max: number): number {
 		return Math.floor(Math.random() * (max - min) + min)
-	}
-
-	private getUserFields(user: User) {
-		return {
-			id: user.id,
-			email: user.email,
-		}
 	}
 }
