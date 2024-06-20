@@ -50,9 +50,7 @@ export class TokenService {
 	}
 
 	async removeToken(refreshToken: string) {
-		const token = await this.tokenRepository.findOne({
-			where: { refreshToken },
-		})
+		const token = await this.findToken(refreshToken)
 
 		if (!token) {
 			throw new HttpException('Неверный токен доступа', HttpStatus.UNAUTHORIZED)

@@ -6,6 +6,8 @@ import { TemporaryAuthDataService } from 'src/temporary-auth-data/temporary-auth
 import { CheckCodeByEmailDto } from './dto/loginByEmailCheckCode'
 import { TokenService } from 'src/token/token.service'
 import { UserService } from 'src/user/user.service'
+import { RefreshTokenDto } from './dto/refreshToken.dto'
+import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class AuthService {
@@ -13,7 +15,8 @@ export class AuthService {
 		private readonly userService: UserService,
 		private readonly mailService: MailService,
 		private readonly temporaryAuthDataService: TemporaryAuthDataService,
-		private readonly tokenService: TokenService
+		private readonly tokenService: TokenService,
+		private readonly configService: ConfigService
 	) {}
 
 	async loginByEmail({ email }: LoginByEmailDto) {
@@ -73,5 +76,67 @@ export class AuthService {
 
 	private generateCode(min: number, max: number): number {
 		return Math.floor(Math.random() * (max - min) + min)
+	}
+
+	async getNewTokens({ refreshToken }: RefreshTokenDto) {
+		if (!refreshToken) {
+			throw new HttpException(
+				'Неправильные данные входа, зарегистрируйтесь или войдите в личный кабинет',
+				HttpStatus.UNAUTHORIZED
+			)
+		}
+
+		const result = await this.tokenService.validateToken(
+			refreshToken,
+			this.configService.get('PRIVATE_KEY_REFRESH') as string
+		)
+		if (!result) {
+			throw new HttpException('Неверный токен доступа', HttpStatus.UNAUTHORIZED)
+		}
+
+		const foundToken = await this.tokenService.findToken(refreshToken)
+
+		if (!foundToken) {
+			throw new HttpException('Неверный токен обновления', HttpStatus.BAD_REQUEST)
+		}
+
+		const user = await this.userService.getUserByEmail(result.email)
+
+		if (!user) {
+			throw new HttpException(
+				'Неправильные данные входа, зарегистрируйтесь или войдите в личный кабинет',
+				HttpStatus.UNAUTHORIZED
+			)
+		}
+
+		const tokens = await this.tokenService.issueTokenPair(user)
+
+		await this.tokenService.saveToken(user.id, tokens.refreshToken)
+
+		return {
+			user,
+			tokens,
+		}
+	}
+
+	async logout({ refreshToken }: RefreshTokenDto) {
+		await this.tokenService.removeToken(refreshToken)
+	}
+
+	async authMe(userId: number) {
+		const user = await this.userService.getUserById(userId)
+
+		if (!user) {
+			throw new HttpException('Пользователь не найден', HttpStatus.NOT_FOUND)
+		}
+
+		const tokens = await this.tokenService.issueTokenPair(user)
+
+		await this.tokenService.saveToken(user.id, tokens.refreshToken)
+
+		return {
+			user,
+			tokens,
+		}
 	}
 }
