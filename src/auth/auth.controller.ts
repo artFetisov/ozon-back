@@ -6,6 +6,7 @@ import { RefreshTokenDto } from './dto/refreshToken.dto'
 import { JwtAuthGuard } from './guards/jwt.guard'
 import { UserData } from 'src/user/decorators/user-data.decorator'
 import { User } from 'src/user/user.model'
+import { LoginByPhoneDto } from './dto/loginByPhone.dto'
 
 @Controller('auth')
 export class AuthController {
@@ -15,6 +16,12 @@ export class AuthController {
 	@Post('login-by-email')
 	loginByEmail(@Body() loginByEmailDto: LoginByEmailDto) {
 		return this.authService.loginByEmail(loginByEmailDto)
+	}
+
+	@UsePipes(new ValidationPipe())
+	@Post('login-by-phone')
+	loginByPhone(@Body() loginByPhoneDto: LoginByPhoneDto) {
+		return this.authService.loginByPhone()
 	}
 
 	@UsePipes(new ValidationPipe())

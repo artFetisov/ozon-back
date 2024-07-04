@@ -43,6 +43,6 @@ export class User extends Model<User, UserCreationsAttrs> {
 	@Column({ type: DataType.STRING, defaultValue: null })
 	phone: string
 
-	@Column({ type: DataType.BLOB, defaultValue: null })
+	@Column({ type: DataType.STRING, defaultValue: null })
 	avatar: string
 }

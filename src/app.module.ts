@@ -10,6 +10,7 @@ import { TemporaryAuthData } from './temporary-auth-data/temporary-auth-data.mod
 import { AuthModule } from './auth/auth.module'
 import { TokenModule } from './token/token.module'
 import { Token } from './token/token.model'
+import { FilesModule } from './files/files.module';
 
 @Module({
 	imports: [
@@ -33,6 +34,7 @@ import { Token } from './token/token.model'
 		AuthModule,
 		TemporaryAuthDataModule,
 		TokenModule,
+		FilesModule,
 	],
 })
 export class AppModule {}

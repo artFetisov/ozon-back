@@ -139,4 +139,11 @@ export class AuthService {
 			tokens,
 		}
 	}
+
+	async loginByPhone() {
+		throw new HttpException(
+			'К сожалению пока не реализован вход в аккаунт по номеру телефона. Войдите по почте.',
+			HttpStatus.NOT_FOUND
+		)
+	}
 }
