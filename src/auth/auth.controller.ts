@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Post, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, Post, UsePipes, ValidationPipe, UseGuards, Delete } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { LoginByEmailDto } from './dto/loginByEmail.dto'
 import { CheckCodeByEmailDto } from './dto/loginByEmailCheckCode'

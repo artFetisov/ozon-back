@@ -1,4 +1,5 @@
 export interface IEmailSendCode {
-  to: string
-  code: number
+	to: string
+	code: number
+	message: string
 }

@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common'
 import * as bcrypt from 'bcryptjs'
 import { LoginByEmailDto } from './dto/loginByEmail.dto'
 import { MailService } from 'src/mail/mail.service'
@@ -12,6 +12,7 @@ import { ConfigService } from '@nestjs/config'
 @Injectable()
 export class AuthService {
 	constructor(
+		@Inject(forwardRef(() => UserService))
 		private readonly userService: UserService,
 		private readonly mailService: MailService,
 		private readonly temporaryAuthDataService: TemporaryAuthDataService,
@@ -20,9 +21,9 @@ export class AuthService {
 	) {}
 
 	async loginByEmail({ email }: LoginByEmailDto) {
-		const foundedTempData = await this.temporaryAuthDataService.getByPropertyValue(email)
+		const foundTempData = await this.temporaryAuthDataService.getByPropertyValue(email)
 
-		foundedTempData?.destroy()
+		await foundTempData?.destroy()
 
 		const candidate = await this.userService.getUserByEmail(email)
 
@@ -34,7 +35,11 @@ export class AuthService {
 			passwordHash,
 		})
 
-		await this.mailService.sendMail({ code: verificationCode, to: email })
+		await this.mailService.sendMail({
+			code: verificationCode,
+			to: email,
+			message: 'Здравствуйте! Вы пытаетесь войти в личный кабинет Ozon. Вот ваш код для входа.',
+		})
 
 		return { email, isNewUser: candidate?.isNewUser ?? true }
 	}
@@ -74,7 +79,7 @@ export class AuthService {
 		}
 	}
 
-	private generateCode(min: number, max: number): number {
+	generateCode(min: number, max: number): number {
 		return Math.floor(Math.random() * (max - min) + min)
 	}
 

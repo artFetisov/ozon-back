@@ -1,5 +1,5 @@
 import { TokenModule } from './../token/token.module'
-import { Module } from '@nestjs/common'
+import { Module, forwardRef } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { AuthController } from './auth.controller'
 import { ConfigModule } from '@nestjs/config'
@@ -12,7 +12,14 @@ import { JwtStrategy } from './strategies/jwt.strategy'
 @Module({
 	providers: [AuthService, JwtStrategy],
 	controllers: [AuthController],
-	imports: [MailModule, TemporaryAuthDataModule, UserModule, TokenModule, ConfigModule, PassportModule],
+	imports: [
+		MailModule,
+		TemporaryAuthDataModule,
+		forwardRef(() => UserModule),
+		TokenModule,
+		ConfigModule,
+		PassportModule,
+	],
 	exports: [AuthService],
 })
 export class AuthModule {}

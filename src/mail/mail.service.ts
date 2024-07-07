@@ -4,16 +4,17 @@ import { IEmailSendCode } from './types/mailData.types'
 
 @Injectable()
 export class MailService {
-  constructor(private mailerService: MailerService) {}
+	constructor(private mailerService: MailerService) {}
 
-  async sendMail({ to, code }: IEmailSendCode) {
-    await this.mailerService.sendMail({
-      to,
-      subject: 'Отправка кода верификации',
-      template: 'code',
-      context: {
-        code,
-      },
-    })
-  }
+	async sendMail({ to, code, message }: IEmailSendCode) {
+		await this.mailerService.sendMail({
+			to,
+			subject: 'Отправка кода верификации',
+			template: 'code',
+			context: {
+				code,
+				message,
+			},
+		})
+	}
 }

@@ -6,6 +6,8 @@ import { UserData } from './decorators/user-data.decorator'
 import { User } from './user.model'
 import { UpdatePhoneDto } from './dto/updatePhone.dto'
 import { CreateUserDto } from './dto/createUser.dto'
+import { UpdatePhoneCheckCodeDto } from './dto/updatePhoneCheckCode.dto'
+import { UpdateEmailCheckCodeDto } from './dto/updateEmailCheckCode.dto'
 
 @Controller('user')
 export class UserController {
@@ -26,8 +28,15 @@ export class UserController {
 	@UseGuards(JwtAuthGuard)
 	@UsePipes(new ValidationPipe())
 	@Put('update-phone')
-	updatePhone(@Body() updatePhoneDto: UpdatePhoneDto, @UserData() { id }: Pick<User, 'id'>) {
-		return this.userService.updatePhone(updatePhoneDto, id)
+	updatePhone(@Body() updatePhoneDto: UpdatePhoneDto) {
+		return this.userService.updatePhone(updatePhoneDto)
+	}
+
+	@UseGuards(JwtAuthGuard)
+	@UsePipes(new ValidationPipe())
+	@Put('update-phone-check-code')
+	updatePhoneCheckCode(@Body() updatePhoneCheckCodeDto: UpdatePhoneCheckCodeDto) {
+		return this.userService.updatePhoneCheckCode(updatePhoneCheckCodeDto)
 	}
 
 	@UseGuards(JwtAuthGuard)
@@ -35,5 +44,12 @@ export class UserController {
 	@Put('update-email')
 	updateEmail(@Body() updateEmailDto: CreateUserDto, @UserData() { id }: Pick<User, 'id'>) {
 		return this.userService.updateEmail(updateEmailDto, id)
+	}
+
+	@UseGuards(JwtAuthGuard)
+	@UsePipes(new ValidationPipe())
+	@Put('update-email-check-code')
+	updateEmailCheckCode(@Body() updateEmailCheckCodeDto: UpdateEmailCheckCodeDto, @UserData() { id }: Pick<User, 'id'>) {
+		return this.userService.updateEmailCheckCode(updateEmailCheckCodeDto, id)
 	}
 }
