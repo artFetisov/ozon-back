@@ -13,6 +13,8 @@ import { Token } from './token/token.model'
 import { FilesModule } from './files/files.module'
 import { CategoryModule } from './category/category.module'
 import { Category } from './category/category.model'
+import { SubCategory } from './category/sub-category.model'
+import { SubSubCategory } from './category/sub-sub-category.model'
 
 @Module({
 	imports: [
@@ -28,7 +30,7 @@ import { Category } from './category/category.model'
 			username: process.env.POSTGRES_USER,
 			password: process.env.POSTGRES_PASSWORD,
 			database: process.env.POSTGRES_DB,
-			models: [User, TemporaryAuthData, Token, Category],
+			models: [User, TemporaryAuthData, Token, Category, SubCategory, SubSubCategory],
 			autoLoadModels: true,
 		}),
 		UserModule,

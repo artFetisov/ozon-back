@@ -1,4 +1,6 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript'
+import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript'
+import { SubCategory } from './sub-category.model'
+import { SubSubCategory } from './sub-sub-category.model'
 
 interface CategoryCreationsAttrs {
 	title: string
@@ -15,9 +17,15 @@ export class Category extends Model<Category, CategoryCreationsAttrs> {
 	})
 	id: number
 
-	@Column({ type: DataType.STRING, unique: true, allowNull: false })
+	@Column({ type: DataType.STRING, allowNull: false })
 	title: string
 
-	@Column({ type: DataType.STRING, unique: true, allowNull: false })
+	@Column({ type: DataType.STRING, allowNull: false })
 	slug: string
+
+	@HasMany(() => SubCategory)
+	subCategories: SubCategory[]
+
+	@HasMany(() => SubSubCategory)
+	subSubCategories: SubSubCategory[]
 }
